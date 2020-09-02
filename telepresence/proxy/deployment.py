@@ -257,8 +257,9 @@ def create_new_deployment(
         # happens to make some current tests happy but in the long run
         # that's totally arbitrary and doesn't need to be maintained.
         # See issue 494.
-        for port in sorted(expose.remote(), reverse=True):
-            command.append("--port={}".format(port))
+        remote_ports = sorted(expose.remote(), reverse=True)
+        if remote_ports:
+            command.append("--port={}".format(remote_ports.join(",")))
         try:
             runner.check_call(runner.kubectl(*command))
         except CalledProcessError as exc:
